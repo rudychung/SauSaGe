@@ -29,10 +29,12 @@ std::string Text::createHtml() const {
 	std::string title = newFileName;
 	std::ifstream ifs(m_filePath);
 	std::ofstream ofs(newFileName);
+	bool inParagraph = false;
 
 	// read title, if title is valid
 	if (validTitle) {
-		getline(ifs, title, '\n');
+		std::getline(ifs, title, '\n');
+		ifs.ignore(2);
 	}
 	// add html and header tags
 	ofs << "<!doctype html>" << std::endl
@@ -53,11 +55,19 @@ std::string Text::createHtml() const {
 	while (ifs) {
 		std::string tempString;
 		std::getline(ifs, tempString, '\n');
-		if (tempString.length() > 0) {
-			ofs << "<p>" << tempString << "</p>" << std::endl;
+		// if not in paragraph output open paragraph tag and text in line, now in paragraph
+		if (tempString.length() > 0 && inParagraph == false) {
+			ofs << "<p>" << tempString;
+			inParagraph = true;
 		}
+		// if in paragraph, output space (accounts for no space after line break), then text in line
+		else if (tempString.length() > 0 && inParagraph == true) {
+			ofs << " " << tempString;
+		}
+		// if line is blank, output close paragraph tag, no longer in paragraph
 		else {
-			ofs << "<br>" << std::endl;
+			ofs << "</p>" << std::endl;
+			inParagraph = false;
 		}
 	}
 
