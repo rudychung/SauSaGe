@@ -55,14 +55,10 @@ std::string Text::createHtml() const {
 	while (ifs) {
 		std::string tempString;
 		std::getline(ifs, tempString, '\n');
-		// if not in paragraph output open paragraph tag and text in line, now in paragraph
-		if (tempString.length() > 0 && inParagraph == false) {
-			ofs << "<p>" << tempString;
+		if (tempString.length() > 0 ) {
+			// if in paragraph output open paragraph tag, else output space (to account line break), then line
+			ofs << (inParagraph ? " " : "<p>") << tempString;
 			inParagraph = true;
-		}
-		// if in paragraph, output space (accounts for no space after line break), then text in line
-		else if (tempString.length() > 0 && inParagraph == true) {
-			ofs << " " << tempString;
 		}
 		// if line is blank, output close paragraph tag, no longer in paragraph
 		else {
