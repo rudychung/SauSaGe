@@ -23,7 +23,7 @@ Text::Text(std::filesystem::path filePath) {
 	validTitle = checkCount == 3;
 }
 
-std::string Text::createHtml() const{
+std::string Text::createHtml() const {
 	// replace file extension with html for output file
 	std::string newFileName = m_fileName.substr(0, m_fileName.rfind('.')) + ".html";
 	std::string title = newFileName;

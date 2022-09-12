@@ -1,5 +1,6 @@
 #define VERSION "0.0.1"
 #define NAME "SauSaGe"
+#define AUTHOR "rudychung"
 
 #include <iostream>
 #include <filesystem>
@@ -14,10 +15,12 @@ int main(int argc, char* argv[]) {
 		std::cout << "No arguments." << std::endl;
 	}
 	else {
-		for (int i = 1; i < argc && !exit; i+=2) {
+		for (int i = 1; i < argc && !exit; i += 2) {
 			if (strcmp(argv[i], "-v") == 0 || strcmp(argv[i], "--version") == 0) {
 				// output name and version
-				std::cout << NAME << std::endl << "Version " << VERSION;
+				std::cout << NAME << std::endl
+					<< "Version " << VERSION << std::endl
+					<< "By " << AUTHOR << std::endl;
 				exit = true;
 			}
 			else if (strcmp(argv[i], "-h") == 0 || strcmp(argv[i], "--help") == 0) {
@@ -29,11 +32,11 @@ int main(int argc, char* argv[]) {
 			}
 			else if (strcmp(argv[i], "-i") == 0 || strcmp(argv[i], "--input") == 0) {
 				// set input file path
-					inputPath = argv[i + 1];
+				inputPath = argv[i + 1];
 			}
 			else if (strcmp(argv[i], "-o") == 0 || strcmp(argv[i], "--output") == 0) {
 				// set input file path
-					outputPath = argv[i + 1];
+				outputPath = argv[i + 1];
 			}
 			else {
 				std::cout << "Unknown arguments found";
