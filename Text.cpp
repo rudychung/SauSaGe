@@ -1,12 +1,13 @@
+#include <fstream>
+#include <string>
 #include "Text.h"
 
-Text::Text(std::string filepath) {
-	m_filepath = filepath;
+Text::Text(std::filesystem::path filePath) {
+	m_filePath = filePath;
 	// get filename from filepath
-	m_filename = filepath.substr(filepath.rfind('\\') + 1);
-
+	m_fileName = filePath.filename().string();
 	// check if text contains title
-	std::ifstream ifs(m_filepath);
+	std::ifstream ifs(m_filePath);
 	std::string tempString;
 	int checkCount = 0;
 	for (int i = 0; i < 3; i++) {
@@ -22,12 +23,16 @@ Text::Text(std::string filepath) {
 	validTitle = checkCount == 3;
 }
 
-void Text::createHtml() {
-	std::ifstream ifs(m_filepath);
-	std::ofstream ofs(".\\dist\\" + m_filename.substr(0, m_filename.rfind('.')) + ".html");
-	std::string title = m_filename;
-	std::string tempString;
+std::string Text::createHtml() const{
+	std::string newFileName = m_fileName.substr(0, m_fileName.rfind('.')) + ".html";
+	std::string title = newFileName;
+	std::ifstream ifs(m_filePath);
+	std::ofstream ofs(newFileName);
 
+	// read title, if title is valid
+	if (validTitle) {
+		getline(ifs, title, '\n');
+	}
 	// add html and header tags
 	ofs << "<!doctype html>" << std::endl
 		<< "<html lang = \"en\">" << std::endl
@@ -38,14 +43,14 @@ void Text::createHtml() {
 		<< "</head>" << std::endl
 		<< "<body>" << std::endl;
 
-	// read and add title to top of page
+	// add title to top of page
 	if (validTitle) {
-		getline(ifs, title, '\n');
 		ofs << "<h1>" << title << "</h1>" << std::endl;
 	}
 
 	// read body of text
 	while (ifs) {
+		std::string tempString;
 		std::getline(ifs, tempString, '\n');
 		if (tempString.length() > 0) {
 			ofs << "<p>" << tempString << "</p>" << std::endl;
@@ -58,4 +63,6 @@ void Text::createHtml() {
 	// closing tags
 	ofs << "</body>" << std::endl
 		<< "</html>";
+
+	return newFileName;
 }

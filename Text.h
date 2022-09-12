@@ -1,13 +1,12 @@
 #pragma once
-#include <fstream>
-#include <string>
+#include <filesystem>
 
 class Text {
-	std::string m_filepath;
-	std::string m_filename;
+	std::filesystem::path m_filePath;
+	std::string m_fileName;
 	bool validTitle;
 public:
 	Text() = delete;
-	Text(std::string);
-	void createHtml();
+	Text(std::filesystem::path filePath);
+	std::string createHtml() const;
 };
