@@ -16,7 +16,7 @@ Download `SauSaGe.exe` and execute in command line interface using options.
 - `SauSaGe -i inputDir -o outputDir`
 
 ## Optional Requirements Implemented
-1. Parses title from input files, changes HTML page title and header accordingly.
-2. `-o` and `--output` options allow specification of output directory.
-4. Recursively searches directory structure for text files and converts all of them into `.html` files.
-5. Creates an `index.html` file that links to the output files created if a directory is specfied as input
+- Parses title from input files, changes HTML page title and header accordingly.
+- `-o` and `--output` options allow specification of output directory.
+- Recursively searches directory structure for text files and converts all of them into `.html` files.
+- Creates an `index.html` file that links to the output files created if a directory is specified as input
