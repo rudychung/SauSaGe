@@ -3,6 +3,7 @@
 #define AUTHOR "rudychung"
 
 #include <iostream>
+#include <fstream>
 #include <filesystem>
 #include "Text.h"
 
@@ -11,6 +12,7 @@ int main(int argc, char* argv[]) {
 	std::string inputPath;
 	std::string outputPath = "dist";
 
+	// command line argument handling
 	if (argc <= 1) {
 		std::cout << "No arguments." << std::endl;
 	}
@@ -45,7 +47,7 @@ int main(int argc, char* argv[]) {
 		}
 	}
 
-	// execute if not exiting and input file path is set
+	// execute html file generation if not exiting and input file path is set
 	if (!exit && inputPath.length() > 0) {
 		std::filesystem::path filePath(inputPath);
 		std::filesystem::remove_all(outputPath);
@@ -70,8 +72,45 @@ int main(int argc, char* argv[]) {
 
 		// create html files and move them to output directory
 		for (const Text& i : texts) {
-			std::string htmlName = i.createHtml();
-			std::filesystem::rename(std::filesystem::path("./" + htmlName).make_preferred(), std::filesystem::path("./" + outputPath + "/" + htmlName).make_preferred());
+			// generate html 
+			i.createHtml();
+			// move html file to output directory
+			std::filesystem::rename(
+				std::filesystem::path("./" + i.getHtmlName()).make_preferred(),
+				std::filesystem::path("./" + outputPath + "/" + i.getHtmlName()).make_preferred()
+			);
+		}
+
+		// if input path is a directory, generate an index page
+		if (std::filesystem::is_directory(filePath)) {
+			std::ofstream ofs("index.html");
+			// index page opening tags
+			ofs << "<!doctype html>" << std::endl
+				<< "<html lang = \"en\">" << std::endl
+				<< "<head>" << std::endl
+				<< "<meta charset = \"utf-8\">" << std::endl
+				<< "<title>Index Page</title>" << std::endl
+				<< "<meta name = \"viewport\" content = \"width=device-width, initial-scale=1\">" << std::endl
+				<< "</head>" << std::endl
+				<< "<body>" << std::endl
+				<< "<ul>" << std::endl;
+
+			// links unordered list
+			for (const Text& i : texts) {
+				ofs << "<li><a href=\"" << i.getHtmlName() << "\">" << i.getHtmlName() << "</a></li>" << std::endl;
+			}
+
+			// index page closing tags
+			ofs << "</ul>" << std::endl
+				<< "</body>" << std::endl
+				<< "</html>";
+
+			// close file stream and move index html file to output directory 
+			ofs.close();
+			std::filesystem::rename(
+				std::filesystem::path("./index.html").make_preferred(),
+				std::filesystem::path("./" + outputPath + "/index.html").make_preferred()
+			);
 		}
 	}
 }

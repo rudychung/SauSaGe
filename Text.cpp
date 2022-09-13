@@ -23,9 +23,9 @@ Text::Text(std::filesystem::path filePath) {
 	validTitle = checkCount == 3;
 }
 
-std::string Text::createHtml() const {
-	// replace file extension with html for output file
-	std::string newFileName = m_fileName.substr(0, m_fileName.rfind('.')) + ".html";
+void Text::createHtml() const {
+	// replace file extension with html for output file name
+	std::string newFileName = getHtmlName();
 	std::string title = newFileName;
 	std::ifstream ifs(m_filePath);
 	std::ofstream ofs(newFileName);
@@ -70,6 +70,8 @@ std::string Text::createHtml() const {
 	// closing tags
 	ofs << "</body>" << std::endl
 		<< "</html>";
+}
 
-	return newFileName;
+std::string Text::getHtmlName() const{
+	return m_fileName.substr(0, m_fileName.rfind('.')) + ".html";
 }

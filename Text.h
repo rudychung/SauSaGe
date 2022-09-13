@@ -8,5 +8,6 @@ class Text {
 public:
 	Text() = delete;
 	Text(std::filesystem::path filePath);
-	std::string createHtml() const;
+	void createHtml() const;
+	std::string getHtmlName() const;
 };
