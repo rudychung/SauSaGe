@@ -54,22 +54,24 @@ int main(int argc, char* argv[]) {
 		std::filesystem::create_directory(outputPath);
 		std::vector<Text> texts;
 
-		// if filepath is a directory
-		if (std::filesystem::is_directory(filePath)) {
-			// iterate through files in the directory recursively
-			for (const std::filesystem::directory_entry& i : std::filesystem::recursive_directory_iterator{ filePath })
-			{
-				// if file is not a directory, add to texts vector
-				if (!std::filesystem::is_directory(i.path().string()) && i.path().extension().string() == ".txt") {
-					texts.push_back(i.path());
+		// if inputted file path exists
+		if (std::filesystem::exists(filePath)) {
+			// if filepath is a directory
+			if (std::filesystem::is_directory(filePath)) {
+				// iterate through files in the directory recursively
+				for (const std::filesystem::directory_entry& i : std::filesystem::recursive_directory_iterator{ filePath })
+				{
+					// if file is not a directory, add to texts vector
+					if (!std::filesystem::is_directory(i.path().string()) && i.path().extension().string() == ".txt") {
+						texts.push_back(i.path());
+					}
 				}
 			}
+			else {
+				// add single file to texts
+				texts.push_back(filePath);
+			}
 		}
-		else {
-			// add single file to texts
-			texts.push_back(filePath);
-		}
-
 		// create html files and move them to output directory
 		for (const Text& i : texts) {
 			// generate html 
@@ -85,15 +87,7 @@ int main(int argc, char* argv[]) {
 		if (std::filesystem::is_directory(filePath)) {
 			std::ofstream ofs("index.html");
 			// index page opening tags
-			ofs << "<!doctype html>" << std::endl
-				<< "<html lang = \"en\">" << std::endl
-				<< "<head>" << std::endl
-				<< "<meta charset = \"utf-8\">" << std::endl
-				<< "<title>Index Page</title>" << std::endl
-				<< "<meta name = \"viewport\" content = \"width=device-width, initial-scale=1\">" << std::endl
-				<< "</head>" << std::endl
-				<< "<body>" << std::endl
-				<< "<ul>" << std::endl;
+			ofs << OPENTAGS[0] << "Index Page" << OPENTAGS[1] << "<ul>\n";
 
 			// links unordered list
 			for (const Text& i : texts) {
@@ -101,9 +95,7 @@ int main(int argc, char* argv[]) {
 			}
 
 			// index page closing tags
-			ofs << "</ul>" << std::endl
-				<< "</body>" << std::endl
-				<< "</html>";
+			ofs << "</ul>\n" << CLOSETAGS;
 
 			// close file stream and move index html file to output directory 
 			ofs.close();
