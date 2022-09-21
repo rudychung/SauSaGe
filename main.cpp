@@ -70,7 +70,6 @@ int main(int argc, char* argv[]) {
 			else {
 				// add single file to texts
 				texts.push_back(filePath);
-				// std::cout << texts[texts.size() - 1].getFileExtension() << std::endl;
 			}
 		}
 		// create html files and move them to output directory
