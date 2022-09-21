@@ -1,5 +1,6 @@
 #include <fstream>
 #include <string>
+#include <regex>
 #include "Text.h"
 
 Text::Text(std::filesystem::path filePath) {
@@ -48,6 +49,12 @@ void Text::createHtml() const {
 		std::string tempString;
 		std::getline(ifs, tempString, '\n');
 		if (tempString.length() > 0) {
+			//Check if MD so that we can replace everything we need to replace
+			if (regex_match(m_fileName, regex(".*\\.md$") {
+				//TODO: Put logic to parse md here
+				tempString = regex_replace(tempString, Text.BOLDAS, "<b>[^*]<\b>")
+			}
+
 			// if in paragraph output open paragraph tag, else output space (to account line break), then line
 			ofs << (inParagraph ? " " : "<p>") << tempString;
 			inParagraph = true;
@@ -62,6 +69,16 @@ void Text::createHtml() const {
 	// closing tags
 	ofs << CLOSETAGS;
 }
+
+//string Text::findMd(&string in, &string regEx)
+//{
+//	std::string match = in.find(regEx);
+//
+//	while (match != None) {
+//		in = 
+//	}
+//	
+//}
 
 std::string Text::getHtmlName() const {
 	return m_fileName.substr(0, m_fileName.rfind('.')) + ".html";
