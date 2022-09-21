@@ -1,4 +1,5 @@
 test/
+dist/
 SauSaGe.sln
 SauSaGe.vcxproj
 SauSaGe.vcxproj.filters
