@@ -66,3 +66,7 @@ void Text::createHtml() const {
 std::string Text::getHtmlName() const {
 	return m_fileName.substr(0, m_fileName.rfind('.')) + ".html";
 }
+
+std::string Text::getFileExtension() const {
+	return m_fileName.substr(m_fileName.rfind('.'));
+}
