@@ -2,7 +2,7 @@
 A Static Site Generator. Reads text files and converts them into `.html` files.
 
 ## Usage
-Download `SauSaGe.exe` and execute in command line interface using options.
+Download `SauSaGe.exe` from the releases and execute in command line interface using options.
 
 Must be executed from the directory where `SauSaGe.exe` is located. 
 
