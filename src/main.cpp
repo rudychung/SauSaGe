@@ -62,7 +62,8 @@ int main(int argc, char* argv[]) {
 				for (const std::filesystem::directory_entry& i : std::filesystem::recursive_directory_iterator{ filePath })
 				{
 					// if file is not a directory, add to texts vector
-					if (!std::filesystem::is_directory(i.path().string()) && i.path().extension().string() == ".txt" || !std::filesystem::is_directory(i.path().string()) && i.path().extension().string() == ".md") {
+					if (!std::filesystem::is_directory(i.path().string()) && i.path().extension().string() == ".txt" || 
+						!std::filesystem::is_directory(i.path().string()) && i.path().extension().string() == ".md") {
 						texts.push_back(i.path());
 					}
 				}

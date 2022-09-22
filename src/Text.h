@@ -11,11 +11,11 @@ const std::string CLOSETAGS = "</body>\n</html>\n";
 class Text {
 	std::filesystem::path m_filePath;
 	std::string m_fileName;
+	std::string m_fileExt;
 	bool validTitle;
 public:
 	Text() = delete;
 	Text(std::filesystem::path filePath);
 	void createHtml() const;
 	std::string getHtmlName() const;
-	std::string getFileExtension() const;
 };

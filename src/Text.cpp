@@ -1,13 +1,15 @@
+#include <iostream>
 #include <fstream>
 #include <string>
 #include <regex>
 #include "Text.h"
-#include <iostream>
+
 
 Text::Text(std::filesystem::path filePath) {
 	m_filePath = filePath;
-	// get filename from filepath
+	// get filename and extension from filepath
 	m_fileName = filePath.filename().string();
+	m_fileExt = m_fileName.substr(m_fileName.rfind('.'));
 	// check if text contains title
 	std::ifstream ifs(m_filePath);
 	std::string tempString;
@@ -31,18 +33,18 @@ void Text::createHtml() const {
 	std::ifstream ifs(m_filePath, std::ios::app);
 	std::ofstream ofs(getHtmlName());
 	bool inParagraph = false;
-	bool isMarkdown = getFileExtension() == ".md";
 
-	std::regex boldAs("(\\*\\*)([^\\*]+)(\\*\\*)");
-	std::regex boldUn("(\\_\\_)([^\\_]+)(\\_\\_)");
-	std::regex italAs("(\\*)([^\\*]+)(\\*)");
-	std::regex italUn("(\\_)([^\\_]+)(\\_)");
+	std::regex boldAs("(\\*\\*)([^*]+)(\\*\\*)");
+	std::regex boldUn("(__)([^_]+)(__)");
+	std::regex italAs("(\\*)([^*]+)(\\*)");
+	std::regex italUn("(_)([^_]+)(_)");
 
 	// read title, if title is valid
 	if (validTitle) {
 		std::getline(ifs, title, '\n');
 		ifs.ignore(2);
 	}
+
 	// add html and header tags
 	ofs << OPENTAGS[0] << title << OPENTAGS[1];
 
@@ -57,30 +59,23 @@ void Text::createHtml() const {
 		std::getline(ifs, tempString, '\n');
 		if (tempString.length() > 0) {
 			//Check if MD so that we can replace everything we need to replace
-			if (std::regex_match(m_fileName, std::regex("(.*.md$)"))) {
-				//TODO: Put logic to parse md here
+			if (m_fileExt == ".md") {
 				try {
-					//tempString = std::regex_replace(tempString, std::regex("(\*\*[^*]\*\*)"), "i");
-					//std::cout << std::regex_replace(tempString, std::regex("(\*\*[^\*]+\*\*)"), "<b>$&<\\b>");
-					tempString = std::regex_replace(tempString, boldAs, "<b>$2<\/b>");
-					tempString = std::regex_replace(tempString, boldUn, "<b>$2<\/b>");
-					tempString = std::regex_replace(tempString, italUn, "<i>$2<\/i>");
-					tempString = std::regex_replace(tempString, italAs, "<i>$2<\/i>");
+					tempString = std::regex_replace(tempString, boldAs, "<b>$2</b>");
+					tempString = std::regex_replace(tempString, boldUn, "<b>$2</b>");
+					tempString = std::regex_replace(tempString, italUn, "<i>$2</i>");
+					tempString = std::regex_replace(tempString, italAs, "<i>$2</i>");
 				}
 				catch (const std::regex_error& e) {
 					std::cout << "regex error caught: " << e.what() << "\n";
 				}
 			}
 
-			// if in paragraph output open paragraph tag, else output space (to account line break), then line
-			ofs << (inParagraph ? " " : "<p>") << tempString;
-			inParagraph = true;
-		}
-			if (isMarkdown && tempString.starts_with("## ")) {
+			if (m_fileExt == ".md" && tempString.find("## ", 0, 3) != std::string::npos) {
 				ofs << (inParagraph ? "</p>" : "") << "<h2>" << tempString.substr(3) << "</h2>" << std::endl;
 				inParagraph = false;
 			}
-			else if (isMarkdown && tempString.starts_with("# ")) {
+			else if (m_fileExt == ".md" && tempString.find("# ", 0, 2) != std::string::npos) {
 				ofs << (inParagraph ? "</p>" : "") << "<h1>" << tempString.substr(2) << "</h1>" << std::endl;
 				inParagraph = false;
 			}
@@ -104,8 +99,4 @@ void Text::createHtml() const {
 
 std::string Text::getHtmlName() const {
 	return m_fileName.substr(0, m_fileName.rfind('.')) + ".html";
-}
-
-std::string Text::getFileExtension() const {
-	return m_fileName.substr(m_fileName.rfind('.'));
 }
