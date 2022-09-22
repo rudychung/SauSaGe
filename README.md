@@ -1,5 +1,5 @@
 # SauSaGe
-A Static Site Generator. Reads text files and converts them into `.html` files.
+A Static Site Generator. Reads text files and converts them into `.html` files. Recently also updated to read .md files and parse certain markdown tokens.
 
 ## Usage
 Download `SauSaGe.exe` from the releases and execute in command line interface using options.
@@ -14,6 +14,7 @@ Must be executed from the directory where `SauSaGe.exe` is located.
 
 ## Usage Examples 
 - `SauSaGe -i textFile.txt`
+- `SauSaGe -i markDown.md`
 - `SauSaGe -i inputDir`
 - `SauSaGe -i inputDir -o outputDir`
 
@@ -23,3 +24,4 @@ Must be executed from the directory where `SauSaGe.exe` is located.
 - Recursively searches directory structure for text files and converts all of them into `.html` files.
 - Creates an `index.html` file that links to the output files created if a directory is specified as input
 - Also is able to read `.md` files, where it successfully uses Heading 1 and 2 (# and ##) features of Markdown
+- Bold and Italics wrapped in single or double asterisks or underscores can be read from .md files. eg: \*\*Bold\*\* or \_italic\_
