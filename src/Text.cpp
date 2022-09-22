@@ -29,6 +29,7 @@ void Text::createHtml() const {
 	std::ifstream ifs(m_filePath, std::ios::app);
 	std::ofstream ofs(getHtmlName());
 	bool inParagraph = false;
+	bool isMarkdown = getFileExtension() == ".md";
 
 	// read title, if title is valid
 	if (validTitle) {
@@ -48,9 +49,19 @@ void Text::createHtml() const {
 		std::string tempString;
 		std::getline(ifs, tempString, '\n');
 		if (tempString.length() > 0) {
-			// if in paragraph output open paragraph tag, else output space (to account line break), then line
-			ofs << (inParagraph ? " " : "<p>") << tempString;
-			inParagraph = true;
+			if (isMarkdown && tempString.starts_with("## ")) {
+				ofs << (inParagraph ? "</p>" : "") << "<h2>" << tempString.substr(3) << "</h2>" << std::endl;
+				inParagraph = false;
+			}
+			else if (isMarkdown && tempString.starts_with("# ")) {
+				ofs << (inParagraph ? "</p>" : "") << "<h1>" << tempString.substr(2) << "</h1>" << std::endl;
+				inParagraph = false;
+			}
+			else {
+				// if in paragraph output open paragraph tag, else output space (to account line break), then line
+				ofs << (inParagraph ? " " : "<p>") << tempString;
+				inParagraph = true;
+			}
 		}
 		// if line is blank, output close paragraph tag, no longer in paragraph
 		else if (inParagraph == true && tempString.length() <= 0) {
@@ -65,4 +76,8 @@ void Text::createHtml() const {
 
 std::string Text::getHtmlName() const {
 	return m_fileName.substr(0, m_fileName.rfind('.')) + ".html";
+}
+
+std::string Text::getFileExtension() const {
+	return m_fileName.substr(m_fileName.rfind('.'));
 }

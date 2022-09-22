@@ -22,3 +22,4 @@ Must be executed from the directory where `SauSaGe.exe` is located.
 - `-o` and `--output` options allow specification of output directory.
 - Recursively searches directory structure for text files and converts all of them into `.html` files.
 - Creates an `index.html` file that links to the output files created if a directory is specified as input
+- Also is able to read `.md` files, where it successfully uses Heading 1 and 2 (# and ##) features of Markdown
