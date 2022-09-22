@@ -17,4 +17,5 @@ public:
 	Text(std::filesystem::path filePath);
 	void createHtml() const;
 	std::string getHtmlName() const;
+	std::string getFileExtension() const;
 };
