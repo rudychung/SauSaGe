@@ -72,11 +72,11 @@ void Text::createHtml() const {
 			}
 
 			if (m_fileExt == ".md" && tempString.find("## ", 0, 3) != std::string::npos) {
-				ofs << (inParagraph ? "</p>" : "") << "<h2>" << tempString.substr(3) << "</h2>" << std::endl;
+				ofs << (inParagraph ? "</p>\n" : "") << "<h2>" << tempString.substr(3) << "</h2>" << std::endl;
 				inParagraph = false;
 			}
 			else if (m_fileExt == ".md" && tempString.find("# ", 0, 2) != std::string::npos) {
-				ofs << (inParagraph ? "</p>" : "") << "<h1>" << tempString.substr(2) << "</h1>" << std::endl;
+				ofs << (inParagraph ? "</p>\n" : "") << "<h1>" << tempString.substr(2) << "</h1>" << std::endl;
 				inParagraph = false;
 			}
 			else {
