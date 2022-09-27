@@ -47,7 +47,7 @@ int main(int argc, char* argv[]) {
 
 	// execute html file generation if not exiting and input file path is set
 	if (!exit && inputPath.length() > 0) {
-		Files files = Files(inputPath, outputPath);
+		Files files(inputPath, outputPath);
 		files.createFiles();
 	}
 }
