@@ -3,9 +3,7 @@
 #define AUTHOR "rudychung"
 
 #include <iostream>
-#include <fstream>
-#include <filesystem>
-#include "Text.h"
+#include "Files.h"
 
 int main(int argc, char* argv[]) {
 	bool exit = false;
@@ -49,61 +47,7 @@ int main(int argc, char* argv[]) {
 
 	// execute html file generation if not exiting and input file path is set
 	if (!exit && inputPath.length() > 0) {
-		std::filesystem::path filePath(inputPath);
-		std::filesystem::remove_all(outputPath);
-		std::filesystem::create_directory(outputPath);
-		std::vector<Text> texts;
-
-		// if inputted file path exists
-		if (std::filesystem::exists(filePath)) {
-			// if filepath is a directory
-			if (std::filesystem::is_directory(filePath)) {
-				// iterate through files in the directory recursively
-				for (const std::filesystem::directory_entry& i : std::filesystem::recursive_directory_iterator{ filePath })
-				{
-					// if file is not a directory, add to texts vector
-					if (!std::filesystem::is_directory(i.path().string()) && i.path().extension().string() == ".txt" || 
-						!std::filesystem::is_directory(i.path().string()) && i.path().extension().string() == ".md") {
-						texts.push_back(i.path());
-					}
-				}
-			}
-			else {
-				// add single file to texts
-				texts.push_back(filePath);
-			}
-		}
-		// create html files and move them to output directory
-		for (const Text& i : texts) {
-			// generate html 
-			i.createHtml();
-			// move html file to output directory
-			std::filesystem::rename(
-				std::filesystem::path("./" + i.getHtmlName()).make_preferred(),
-				std::filesystem::path("./" + outputPath + "/" + i.getHtmlName()).make_preferred()
-			);
-		}
-
-		// if input path is a directory, generate an index page
-		if (std::filesystem::is_directory(filePath)) {
-			std::ofstream ofs("index.html");
-			// index page opening tags
-			ofs << OPENTAGS[0] << "Index Page" << OPENTAGS[1] << "<ul>\n";
-
-			// links unordered list
-			for (const Text& i : texts) {
-				ofs << "<li><a href=\"" << i.getHtmlName() << "\">" << i.getHtmlName() << "</a></li>" << std::endl;
-			}
-
-			// index page closing tags
-			ofs << "</ul>\n" << CLOSETAGS;
-
-			// close file stream and move index html file to output directory 
-			ofs.close();
-			std::filesystem::rename(
-				std::filesystem::path("./index.html").make_preferred(),
-				std::filesystem::path("./" + outputPath + "/index.html").make_preferred()
-			);
-		}
+		Files files = Files(inputPath, outputPath);
+		files.createFiles();
 	}
 }
