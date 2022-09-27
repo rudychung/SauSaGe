@@ -69,15 +69,14 @@ void Text::createHtml() const {
 				catch (const std::regex_error& e) {
 					std::cout << "regex error caught: " << e.what() << "\n";
 				}
-			}
-
-			if (m_fileExt == ".md" && tempString.find("## ", 0, 3) != std::string::npos) {
-				ofs << (inParagraph ? "</p>\n" : "") << "<h2>" << tempString.substr(3) << "</h2>" << std::endl;
-				inParagraph = false;
-			}
-			else if (m_fileExt == ".md" && tempString.find("# ", 0, 2) != std::string::npos) {
-				ofs << (inParagraph ? "</p>\n" : "") << "<h1>" << tempString.substr(2) << "</h1>" << std::endl;
-				inParagraph = false;
+				if (tempString.find("## ", 0, 3) != std::string::npos) {
+					ofs << (inParagraph ? "</p>\n" : "") << "<h2>" << tempString.substr(3) << "</h2>" << std::endl;
+					inParagraph = false;
+				}
+				else if (tempString.find("# ", 0, 2) != std::string::npos) {
+					ofs << (inParagraph ? "</p>\n" : "") << "<h1>" << tempString.substr(2) << "</h1>" << std::endl;
+					inParagraph = false;
+				}
 			}
 			else {
 				// if in paragraph output open paragraph tag, else output space (to account line break), then line
