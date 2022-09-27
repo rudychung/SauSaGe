@@ -4,7 +4,6 @@
 #include <regex>
 #include "Text.h"
 
-
 Text::Text(std::filesystem::path filePath) {
 	m_filePath = filePath;
 	// get filename and extension from filepath
@@ -30,14 +29,9 @@ Text::Text(std::filesystem::path filePath) {
 void Text::createHtml() const {
 	// replace file extension with html for output file name
 	std::string title = getHtmlName();
-	std::ifstream ifs(m_filePath, std::ios::app);
+	std::ifstream ifs(m_filePath);
 	std::ofstream ofs(getHtmlName());
 	bool inParagraph = false;
-
-	std::regex boldAs("(\\*\\*)([^*]+)(\\*\\*)");
-	std::regex boldUn("(__)([^_]+)(__)");
-	std::regex italAs("(\\*)([^*]+)(\\*)");
-	std::regex italUn("(_)([^_]+)(_)");
 
 	// read title, if title is valid
 	if (validTitle) {
@@ -60,23 +54,7 @@ void Text::createHtml() const {
 		if (tempString.length() > 0) {
 			//Check if MD so that we can replace everything we need to replace
 			if (m_fileExt == ".md") {
-				try {
-					tempString = std::regex_replace(tempString, boldAs, "<b>$2</b>");
-					tempString = std::regex_replace(tempString, boldUn, "<b>$2</b>");
-					tempString = std::regex_replace(tempString, italUn, "<i>$2</i>");
-					tempString = std::regex_replace(tempString, italAs, "<i>$2</i>");
-				}
-				catch (const std::regex_error& e) {
-					std::cout << "regex error caught: " << e.what() << "\n";
-				}
-				if (tempString.find("## ", 0, 3) != std::string::npos) {
-					ofs << (inParagraph ? "</p>\n" : "") << "<h2>" << tempString.substr(3) << "</h2>" << std::endl;
-					inParagraph = false;
-				}
-				else if (tempString.find("# ", 0, 2) != std::string::npos) {
-					ofs << (inParagraph ? "</p>\n" : "") << "<h1>" << tempString.substr(2) << "</h1>" << std::endl;
-					inParagraph = false;
-				}
+				parseMarkdown(tempString, ofs, inParagraph);
 			}
 			else {
 				// if in paragraph output open paragraph tag, else output space (to account line break), then line
@@ -95,7 +73,31 @@ void Text::createHtml() const {
 	ofs << CLOSETAGS;
 }
 
-
 std::string Text::getHtmlName() const {
 	return m_fileName.substr(0, m_fileName.rfind('.')) + ".html";
+}
+
+void Text::parseMarkdown(std::string& tempString, std::ostream& ofs, bool& inParagraph) const {
+	std::regex boldAs("(\\*\\*)([^*]+)(\\*\\*)");
+	std::regex boldUn("(__)([^_]+)(__)");
+	std::regex italAs("(\\*)([^*]+)(\\*)");
+	std::regex italUn("(_)([^_]+)(_)");
+
+	try {
+		tempString = std::regex_replace(tempString, boldAs, "<b>$2</b>");
+		tempString = std::regex_replace(tempString, boldUn, "<b>$2</b>");
+		tempString = std::regex_replace(tempString, italUn, "<i>$2</i>");
+		tempString = std::regex_replace(tempString, italAs, "<i>$2</i>");
+	}
+	catch (const std::regex_error& e) {
+		std::cout << "regex error caught: " << e.what() << "\n";
+	}
+	if (tempString.find("## ", 0, 3) != std::string::npos) {
+		ofs << (inParagraph ? "</p>\n" : "") << "<h2>" << tempString.substr(3) << "</h2>" << std::endl;
+		inParagraph = false;
+	}
+	else if (tempString.find("# ", 0, 2) != std::string::npos) {
+		ofs << (inParagraph ? "</p>\n" : "") << "<h1>" << tempString.substr(2) << "</h1>" << std::endl;
+		inParagraph = false;
+	}
 }

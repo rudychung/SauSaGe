@@ -13,9 +13,11 @@ class Text {
 	std::string m_fileName;
 	std::string m_fileExt;
 	bool validTitle;
+	void parseMarkdown(std::string& tempString, std::ostream& ofs, bool& inParagraph) const;
 public:
 	Text() = delete;
 	Text(std::filesystem::path filePath);
 	void createHtml() const;
 	std::string getHtmlName() const;
+
 };
