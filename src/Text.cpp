@@ -82,12 +82,14 @@ void Text::parseMarkdown(std::string& tempString, std::ostream& ofs, bool& inPar
 	std::regex boldUn("(__)([^_]+)(__)");
 	std::regex italAs("(\\*)([^*]+)(\\*)");
 	std::regex italUn("(_)([^_]+)(_)");
+	std::regex code("(`)([^`]+)(`)");
 
 	try {
 		tempString = std::regex_replace(tempString, boldAs, "<b>$2</b>");
 		tempString = std::regex_replace(tempString, boldUn, "<b>$2</b>");
 		tempString = std::regex_replace(tempString, italUn, "<i>$2</i>");
 		tempString = std::regex_replace(tempString, italAs, "<i>$2</i>");
+		tempString = std::regex_replace(tempString, code, "<code>$2</code>");
 	}
 	catch (const std::regex_error& e) {
 		std::cout << "regex error caught: " << e.what() << "\n";
