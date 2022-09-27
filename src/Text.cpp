@@ -100,6 +100,10 @@ void Text::parseMarkdown(std::string& tempString, std::ostream& ofs, bool& inPar
 		ofs << (inParagraph ? "</p>\n" : "") << "<h1>" << tempString.substr(2) << "</h1>" << std::endl;
 		inParagraph = false;
 	}
+	else if (tempString == "---" || tempString == "***") {
+		ofs << (inParagraph ? "</p>\n" : "") << "<hr>" << std::endl;
+		inParagraph = false;
+	}
 	else {
 		// if in paragraph output open paragraph tag, else output space (to account line break), then line
 		ofs << (inParagraph ? " " : "<p>") << tempString;
