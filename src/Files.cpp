@@ -1,7 +1,6 @@
 #include <fstream>
 #include "Files.h"
 
-
 Files::Files(std::string inputPathStr, std::string outputPathStr) {
 	inputPath = std::filesystem::path(inputPathStr);
 	outputPath = std::filesystem::path(outputPathStr);
@@ -14,8 +13,7 @@ Files::Files(std::string inputPathStr, std::string outputPathStr) {
 			for (const std::filesystem::directory_entry& i : std::filesystem::recursive_directory_iterator{ inputPath })
 			{
 				// if file is not a directory, add to texts vector
-				if (!std::filesystem::is_directory(i.path().string()) && i.path().extension().string() == ".txt" ||
-					!std::filesystem::is_directory(i.path().string()) && i.path().extension().string() == ".md") {
+				if (std::filesystem::is_directory(i.path()) && (i.path().extension().string() == ".txt" || i.path().extension().string() == ".md")) {
 					texts.push_back(i.path());
 				}
 			}
@@ -40,6 +38,7 @@ void Files::createFiles() {
 			std::filesystem::path("./" + outputPath.string() + "/" + i.getHtmlName()).make_preferred()
 		);
 	}
+
 	// if input path is a directory, generate an index page
 	if (std::filesystem::is_directory(inputPath)) {
 		createIndexPage();

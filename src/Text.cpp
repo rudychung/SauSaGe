@@ -9,15 +9,18 @@ Text::Text(std::filesystem::path filePath) {
 	// get filename and extension from filepath
 	m_fileName = filePath.filename().string();
 	m_fileExt = m_fileName.substr(m_fileName.rfind('.'));
+
 	// check if text contains title
 	std::ifstream ifs(m_filePath);
 	std::string tempString;
 	int checkCount = 0;
 	for (int i = 0; i < 3; i++) {
 		std::getline(ifs, tempString, '\n');
+		// 1st check, title is present
 		if (i == 0 && tempString.length() > 0) {
 			checkCount++;
 		}
+		// 2nd and 3rd check, subsequent 2 lines are empty
 		else if (i > 0 && tempString.length() == 0) {
 			checkCount++;
 		}
@@ -91,9 +94,10 @@ void Text::parseMarkdown(std::string& tempString, std::ostream& ofs, bool& inPar
 		tempString = std::regex_replace(tempString, italAs, "<i>$2</i>");
 		tempString = std::regex_replace(tempString, code, "<code>$2</code>");
 	}
-	catch (const std::regex_error& e) {
-		std::cout << "regex error caught: " << e.what() << "\n";
+	catch (const std::regex_error& error) {
+		std::cout << "regex error caught: " << error.what() << "\n";
 	}
+
 	if (tempString.find("## ", 0, 3) != std::string::npos) {
 		ofs << (inParagraph ? "</p>\n" : "") << "<h2>" << tempString.substr(3) << "</h2>" << std::endl;
 		inParagraph = false;
