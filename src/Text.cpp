@@ -1,8 +1,7 @@
 #include <iostream>
 #include <fstream>
-#include <string>
-#include <regex>
 #include "Text.h"
+#include "maddy/parser.h"
 
 Text::Text(std::filesystem::path filePath) {
 	m_filePath = filePath;
@@ -34,6 +33,7 @@ void Text::createHtml() const {
 	std::string title = getHtmlName();
 	std::ifstream ifs(m_filePath);
 	std::ofstream ofs(getHtmlName());
+	std::shared_ptr<maddy::Parser> parser = std::make_shared<maddy::Parser>();
 	bool inParagraph = false;
 
 	// read title, if title is valid
@@ -57,7 +57,8 @@ void Text::createHtml() const {
 		if (tempString.length() > 0) {
 			//Check if MD so that we can replace everything we need to replace
 			if (m_fileExt == ".md") {
-				parseMarkdown(tempString, ofs, inParagraph);
+				std::stringstream markdownInput(tempString);
+				ofs << parser->Parse(markdownInput);
 			}
 			else {
 				// if in paragraph output open paragraph tag, else output space (to account line break), then line
@@ -78,41 +79,4 @@ void Text::createHtml() const {
 
 std::string Text::getHtmlName() const {
 	return m_fileName.substr(0, m_fileName.rfind('.')) + ".html";
-}
-
-void Text::parseMarkdown(std::string& tempString, std::ostream& ofs, bool& inParagraph) const {
-	std::regex boldAs("(\\*\\*)([^*]+)(\\*\\*)");
-	std::regex boldUn("(__)([^_]+)(__)");
-	std::regex italAs("(\\*)([^*]+)(\\*)");
-	std::regex italUn("(_)([^_]+)(_)");
-	std::regex code("(`)([^`]+)(`)");
-
-	try {
-		tempString = std::regex_replace(tempString, boldAs, "<b>$2</b>");
-		tempString = std::regex_replace(tempString, boldUn, "<b>$2</b>");
-		tempString = std::regex_replace(tempString, italUn, "<i>$2</i>");
-		tempString = std::regex_replace(tempString, italAs, "<i>$2</i>");
-		tempString = std::regex_replace(tempString, code, "<code>$2</code>");
-	}
-	catch (const std::regex_error& error) {
-		std::cout << "regex error caught: " << error.what() << "\n";
-	}
-
-	if (tempString.find("## ", 0, 3) != std::string::npos) {
-		ofs << (inParagraph ? "</p>\n" : "") << "<h2>" << tempString.substr(3) << "</h2>" << std::endl;
-		inParagraph = false;
-	}
-	else if (tempString.find("# ", 0, 2) != std::string::npos) {
-		ofs << (inParagraph ? "</p>\n" : "") << "<h1>" << tempString.substr(2) << "</h1>" << std::endl;
-		inParagraph = false;
-	}
-	else if (tempString == "---" || tempString == "***") {
-		ofs << (inParagraph ? "</p>\n" : "") << "<hr>" << std::endl;
-		inParagraph = false;
-	}
-	else {
-		// if in paragraph output open paragraph tag, else output space (to account line break), then line
-		ofs << (inParagraph ? " " : "<p>") << tempString;
-		inParagraph = true;
-	}
 }
