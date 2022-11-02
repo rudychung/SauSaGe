@@ -27,6 +27,12 @@
     <ClInclude Include="src\Files.h" />
     <ClInclude Include="src\Text.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include=".clang-format" />
+    <None Include=".clang-tidy" />
+    <None Include="CONTRIBUTING.md" />
+    <None Include="README.md" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>

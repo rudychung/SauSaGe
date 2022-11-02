@@ -1,7 +1,7 @@
-#include <fstream>
 #include "Files.h"
+#include <fstream>
 
-Files::Files(std::string inputPathStr, std::string outputPathStr) {
+Files::Files(const std::string& inputPathStr, const std::string& outputPathStr) {
 	inputPath = std::filesystem::path(inputPathStr);
 	outputPath = std::filesystem::path(outputPathStr);
 
@@ -10,17 +10,16 @@ Files::Files(std::string inputPathStr, std::string outputPathStr) {
 		// if filepath is a directory
 		if (std::filesystem::is_directory(inputPath)) {
 			// iterate through files in the directory recursively
-			for (const std::filesystem::directory_entry& i : std::filesystem::recursive_directory_iterator{ inputPath })
-			{
+			for (const std::filesystem::directory_entry& file : std::filesystem::recursive_directory_iterator{inputPath}) {
 				// if file is not a directory, add to texts vector
-				if (std::filesystem::is_directory(i.path()) && (i.path().extension().string() == ".txt" || i.path().extension().string() == ".md")) {
-					texts.push_back(i.path());
+				if (std::filesystem::is_directory(file.path()) &&
+					(file.path().extension().string() == ".txt" || file.path().extension().string() == ".md")) {
+					texts.emplace_back(file.path());
 				}
 			}
-		}
-		else {
+		} else {
 			// add single file to texts
-			texts.push_back(inputPath);
+			texts.emplace_back(inputPath);
 		}
 	}
 }
@@ -29,14 +28,12 @@ void Files::createFiles() {
 	std::filesystem::remove_all(outputPath);
 	std::filesystem::create_directory(outputPath);
 	// create html files and move them to output directory
-	for (const Text& i : texts) {
-		// generate html 
-		i.createHtml();
+	for (const Text& text : texts) {
+		// generate html
+		text.createHtml();
 		// move html file to output directory
-		std::filesystem::rename(
-			std::filesystem::path("./" + i.getHtmlName()).make_preferred(),
-			std::filesystem::path("./" + outputPath.string() + "/" + i.getHtmlName()).make_preferred()
-		);
+		std::filesystem::rename(std::filesystem::path("./" + text.getHtmlName()).make_preferred(),
+								std::filesystem::path("./" + outputPath.string() + "/" + text.getHtmlName()).make_preferred());
 	}
 
 	// if input path is a directory, generate an index page
@@ -48,7 +45,7 @@ void Files::createFiles() {
 void Files::createIndexPage() {
 	std::ofstream ofs("index.html");
 	// index page opening tags
-	ofs << OPENTAGS[0] << "Index Page" << OPENTAGS[1] << "<ul>\n";
+	ofs << OPENTAGS1 << "Index Page" << OPENTAGS2 << "<ul>\n";
 
 	// links unordered list
 	for (const Text& i : texts) {
@@ -58,10 +55,8 @@ void Files::createIndexPage() {
 	// index page closing tags
 	ofs << "</ul>\n" << CLOSETAGS;
 
-	// close file stream and move index html file to output directory 
+	// close file stream and move index html file to output directory
 	ofs.close();
-	std::filesystem::rename(
-		std::filesystem::path("./index.html").make_preferred(),
-		std::filesystem::path("./" + outputPath.string() + "/index.html").make_preferred()
-	);
+	std::filesystem::rename(std::filesystem::path("./index.html").make_preferred(),
+							std::filesystem::path("./" + outputPath.string() + "/index.html").make_preferred());
 }

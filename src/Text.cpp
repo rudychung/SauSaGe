@@ -1,9 +1,9 @@
-#include <iostream>
-#include <fstream>
 #include "Text.h"
 #include "maddy/parser.h"
+#include <fstream>
+#include <iostream>
 
-Text::Text(std::filesystem::path filePath) {
+Text::Text(const std::filesystem::path& filePath) {
 	m_filePath = filePath;
 	// get filename and extension from filepath
 	m_fileName = filePath.filename().string();
@@ -43,7 +43,7 @@ void Text::createHtml() const {
 	}
 
 	// add html and header tags
-	ofs << OPENTAGS[0] << title << OPENTAGS[1];
+	ofs << OPENTAGS1 << title << OPENTAGS2;
 
 	// add title to top of page
 	if (validTitle) {
@@ -59,15 +59,14 @@ void Text::createHtml() const {
 			if (m_fileExt == ".md") {
 				std::stringstream markdownInput(tempString);
 				ofs << parser->Parse(markdownInput);
-			}
-			else {
+			} else {
 				// if in paragraph output open paragraph tag, else output space (to account line break), then line
 				ofs << (inParagraph ? " " : "<p>") << tempString;
 				inParagraph = true;
 			}
 		}
 		// if line is blank, output close paragraph tag, no longer in paragraph
-		else if (inParagraph == true && tempString.length() <= 0) {
+		else if (inParagraph && tempString.length() <= 0) {
 			ofs << "</p>" << std::endl;
 			inParagraph = false;
 		}
@@ -77,6 +76,4 @@ void Text::createHtml() const {
 	ofs << CLOSETAGS;
 }
 
-std::string Text::getHtmlName() const {
-	return m_fileName.substr(0, m_fileName.rfind('.')) + ".html";
-}
+std::string Text::getHtmlName() const { return m_fileName.substr(0, m_fileName.rfind('.')) + ".html"; }
