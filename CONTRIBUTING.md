@@ -17,7 +17,7 @@ Refer to [this](https://www.clangpowertools.com/blog/getting-started-with-clang-
 
 To run the formatter in the command-line
 ```
-clang-format -i ./src/*
+clang-format -i src/*.cpp src/*.h
 ```
 ***
 To run the formatter in VS2022:
@@ -31,7 +31,7 @@ Refer to [this](https://clang.llvm.org/extra/clang-tidy/) link for details.
 
 To run the linter in the command-line:
 ```
-clang-tidy --config="" ./src/*
+clang-tidy --config="" src/*.cpp src/*.h
 ```
 ***
 To run the linter in VS2022:
