@@ -54,21 +54,20 @@ void Text::createHtml() const {
 	while (ifs) {
 		std::string tempString;
 		std::getline(ifs, tempString, '\n');
-		if (tempString.length() > 0) {
-			//Check if MD so that we can replace everything we need to replace
-			if (m_fileExt == ".md") {
-				std::stringstream markdownInput(tempString);
-				ofs << parser->Parse(markdownInput);
+		//Check if MD so that we can replace everything we need to replace
+		if (m_fileExt == ".md" && tempString.length() > 0) {
+			std::stringstream markdownInput(tempString);
+			ofs << parser->Parse(markdownInput) << std::endl;
+		} else if (m_fileExt == ".txt") {
+			if (inParagraph && tempString.length() <= 0) {
+				// if in paragraph and line is blank, output close paragraph tag, no longer in paragraph
+				ofs << "</p>" << std::endl;
+				inParagraph = false;
 			} else {
 				// if in paragraph output open paragraph tag, else output space (to account line break), then line
 				ofs << (inParagraph ? " " : "<p>") << tempString;
 				inParagraph = true;
 			}
-		}
-		// if line is blank, output close paragraph tag, no longer in paragraph
-		else if (inParagraph && tempString.length() <= 0) {
-			ofs << "</p>" << std::endl;
-			inParagraph = false;
 		}
 	}
 

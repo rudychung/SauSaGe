@@ -39,3 +39,19 @@ To run the linter in VS2022:
 ![format](https://user-images.githubusercontent.com/61764259/199850275-afdde603-dbdc-4a59-8fd7-612b68b2fa0a.png)
 
 Click this button in the toolbar.
+
+## Testing
+Tests run using [Catch2](https://github.com/catchorg/Catch2).
+
+To run tests in the command-line:
+```
+SauSaGe -t
+```
+
+or 
+
+```
+SauSaGe --test
+```
+
+Add tests into the `Tests.cpp`. Add a new test case and include sections within to test added code.

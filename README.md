@@ -11,6 +11,7 @@ Must be executed from the directory where `SauSaGe.exe` is located.
 - `-h` or `--help` - display application options
 - `-i` or `--input` - set the input file/directory
 - `-o` or `--output` - set the output directory (`./dist` by default)
+- `-t` or `--test` - run unit tests
 
 ## Usage Examples 
 - `SauSaGe -i textFile.txt`

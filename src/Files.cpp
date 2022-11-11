@@ -12,7 +12,7 @@ Files::Files(const std::string& inputPathStr, const std::string& outputPathStr) 
 			// iterate through files in the directory recursively
 			for (const std::filesystem::directory_entry& file : std::filesystem::recursive_directory_iterator{inputPath}) {
 				// if file is not a directory, add to texts vector
-				if (std::filesystem::is_directory(file.path()) &&
+				if (!std::filesystem::is_directory(file.path()) &&
 					(file.path().extension().string() == ".txt" || file.path().extension().string() == ".md")) {
 					texts.emplace_back(file.path());
 				}

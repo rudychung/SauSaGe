@@ -1,3 +1,6 @@
+#define CATCH_CONFIG_RUNNER
+#include "catch2/catch.hpp"
+
 #define VERSION "0.0.1"
 #define NAME "SauSaGe"
 #define AUTHOR "rudychung"
@@ -23,8 +26,12 @@ int main(int argc, char* argv[]) {
 				// output help details
 				std::cout << "-v/--version\t- outputs software version" << std::endl
 						  << "-i/--input\t- input file/directory" << std::endl
-						  << "-o/--output\t- output directory (dist by default)" << std::endl;
+						  << "-o/--output\t- output directory (dist by default)" << std::endl
+						  << "-t/--test\t- run unit tests" << std::endl;
 				exit = true;
+
+			} else if (strcmp(argv[i], "-t") == 0 || strcmp(argv[i], "--test") == 0) {
+				return Catch::Session().run();
 			} else if (strcmp(argv[i], "-i") == 0 || strcmp(argv[i], "--input") == 0) {
 				// set input file path
 				inputPath = argv[i + 1];

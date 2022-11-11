@@ -90,7 +90,7 @@ protected:
   {
     if (!this->isStarted)
     {
-      line = "<p>" + line + " ";
+      line = "<p>" + line;
       this->isStarted = true;
       return;
     }

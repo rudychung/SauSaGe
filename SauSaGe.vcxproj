@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClCompile Include="src\Files.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Tests.cpp" />
     <ClCompile Include="src\Text.cpp" />
   </ItemGroup>
   <ItemGroup>
