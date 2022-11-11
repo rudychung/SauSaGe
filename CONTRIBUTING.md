@@ -12,12 +12,23 @@
 **Without VS2022**
 [LLVM](https://releases.llvm.org/) - Command-line clang-format and clang-tidy
 
+## Installing
+If you are using VS2022/2017, you can clone the project using this button:
+
+![clone](https://user-images.githubusercontent.com/61764259/199855260-fadb9594-2732-41a6-86cb-271f4df72f60.png)
+
+otherwise, you can clone the project using Git:
+```
+git clone https://github.com/rudychung/SauSaGe.git
+```
+
+
 ## Formatting
 Refer to [this](https://www.clangpowertools.com/blog/getting-started-with-clang-format-style-options.html) link for details.
 
 To run the formatter in the command-line
 ```
-clang-format -i ./src/*
+clang-format -i src/*.cpp src/*.h
 ```
 ***
 To run the formatter in VS2022:
@@ -31,7 +42,7 @@ Refer to [this](https://clang.llvm.org/extra/clang-tidy/) link for details.
 
 To run the linter in the command-line:
 ```
-clang-tidy --config="" ./src/*
+clang-tidy --config="" src/*.cpp src/*.h
 ```
 ***
 To run the linter in VS2022:
