@@ -61,7 +61,7 @@ void Text::createHtml() const {
 		} else if (m_fileExt == ".txt") {
 			if (inParagraph && tempString.length() <= 0) {
 				// if in paragraph and line is blank, output close paragraph tag, no longer in paragraph
-				ofs << "</p> " << std::endl;
+				ofs << "</p>" << std::endl;
 				inParagraph = false;
 			} else {
 				// if in paragraph output open paragraph tag, else output space (to account line break), then line
