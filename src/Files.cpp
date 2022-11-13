@@ -21,6 +21,8 @@ Files::Files(const std::string& inputPathStr, const std::string& outputPathStr) 
 			// add single file to texts
 			texts.emplace_back(inputPath);
 		}
+	} else {
+		throw std::invalid_argument(inputPathStr + " does not exist.");
 	}
 }
 

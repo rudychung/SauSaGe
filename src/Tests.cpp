@@ -20,6 +20,12 @@ bool compareFiles(std::string filePath1, std::string filePath2) {
 	return equal;
 }
 
+TEST_CASE("Input directory contents") {
+	{
+		SECTION(".txt -> .html") { REQUIRE_THROWS_AS(Files("./doesNotExist", "./outputPath"), std::invalid_argument); }
+	}
+}
+
 TEST_CASE("Output directory contents") {
 	{
 		Files files("./tests/testTxt.txt", "./testDir");

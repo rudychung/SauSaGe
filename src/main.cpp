@@ -29,8 +29,8 @@ int main(int argc, char* argv[]) {
 						  << "-o/--output\t- output directory (dist by default)" << std::endl
 						  << "-t/--test\t- run unit tests" << std::endl;
 				exit = true;
-
 			} else if (strcmp(argv[i], "-t") == 0 || strcmp(argv[i], "--test") == 0) {
+				// run tests
 				return Catch::Session().run();
 			} else if (strcmp(argv[i], "-i") == 0 || strcmp(argv[i], "--input") == 0) {
 				// set input file path
@@ -47,7 +47,11 @@ int main(int argc, char* argv[]) {
 
 	// execute html file generation if not exiting and input file path is set
 	if (!exit && inputPath.length() > 0) {
-		Files files(inputPath, outputPath);
-		files.createFiles();
+		try {
+			Files files(inputPath, outputPath);
+			files.createFiles();
+		} catch (std::invalid_argument err) {
+			std::cerr << err.what();
+		}
 	}
 }
