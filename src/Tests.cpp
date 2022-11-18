@@ -26,6 +26,13 @@ TEST_CASE("Input directory contents") {
 	}
 }
 
+TEST_CASE("Test get HTML name") {
+	{
+		Text testText("./tests/testTxt.txt");
+		REQUIRE(testText.getHtmlName() == "testTxt.html");
+	}
+}
+
 TEST_CASE("Output directory contents") {
 	{
 		Files files("./tests/testTxt.txt", "./testDir");
@@ -36,7 +43,7 @@ TEST_CASE("Output directory contents") {
 	}
 
 	{
-		const char fileNames[4][13] = {"index.html", "test.html", "testMd.html", "testTxt.html"};
+		const char fileNames[5][18] = {"index.html", "test.html", "testMarkdown.html", "testMd.html", "testTxt.html"};
 		int passedChecks = 0;
 		int i = 0;
 		Files files("./tests", "./testDir");
@@ -48,7 +55,7 @@ TEST_CASE("Output directory contents") {
 			}
 			++i;
 		}
-		SECTION("Multiple files") { REQUIRE(passedChecks == 4); }
+		SECTION("Multiple files") { REQUIRE(passedChecks == 5); }
 		std::filesystem::remove_all("./testDir");
 	}
 }
@@ -66,5 +73,14 @@ TEST_CASE("File conversions") {
 		testMd.createHtml();
 		SECTION(".md -> .html") { REQUIRE(compareFiles("./tests/test.html", "./testMd.html") == true); }
 		std::filesystem::remove("./testMd.html");
+	}
+
+	{
+		Text testWithMarkdown("./tests/testMarkdown.md");
+		testWithMarkdown.createHtml();
+		SECTION(".md -> .html with markdown syntax bold, italic, code") {
+			REQUIRE(compareFiles("./tests/testMarkdownSyntax.html", "./testMarkdown.html") == true);
+		}
+		std::filesystem::remove("./testMarkdown.html");
 	}
 }
