@@ -1,7 +1,7 @@
 #define CATCH_CONFIG_RUNNER
 #include "catch2/catch.hpp"
 
-#define VERSION "0.0.1"
+#define VERSION "1.0.0"
 #define NAME "SauSaGe"
 #define AUTHOR "rudychung"
 
