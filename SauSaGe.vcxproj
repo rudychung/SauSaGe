@@ -32,8 +32,12 @@
     <None Include=".clang-format" />
     <None Include=".clang-tidy" />
     <None Include=".github\workflows\ci.yml" />
+    <None Include="conanfile.py" />
     <None Include="CONTRIBUTING.md" />
     <None Include="README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="src\CMakeLists.txt" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
